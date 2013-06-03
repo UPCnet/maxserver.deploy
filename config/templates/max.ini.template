@@ -1,0 +1,70 @@
+[app:main]
+use = egg:max
+pyramid.reload_templates = ${pyramid:development}
+pyramid.debug_authorization = false
+pyramid.debug_notfound = false
+pyramid.debug_routematch = false
+pyramid.debug_templates = ${pyramid:development}
+pyramid.default_locale_name = en
+pyramid.includes = pyramid_debugtoolbar
+                   pyramid_tm
+
+max.oauth_check_endpoint = ${hosts:oauth}/checktoken
+cache.regions = oauth_token
+cache.type = memory
+cache.oauth_token.expire = 60
+mongodb.url = mongodb://${hosts-extra:mongo}
+mongodb.db_name = max
+max.debug_api = false
+max.oauth_passtrough = false
+avatar_folder = ${buildout:directory}/var/avatars
+
+[server:main]
+use = egg:waitress#main
+host = ${hosts:main}
+port = ${ports:max}
+
+# Begin logging configuration
+
+[loggers]
+keys = root, max, exceptions
+
+[handlers]
+keys = console, exceptionlog
+
+[formatters]
+keys = generic, clean
+
+[logger_root]
+level = WARN
+handlers = console
+
+[logger_max]
+level = WARN
+handlers =
+qualname = max
+
+[logger_exceptions]
+level = DEBUG
+handlers = exceptionlog
+qualname = exceptions
+
+[handler_exceptionlog]
+level = DEBUG
+class = FileHandler
+args = ('${buildout:directory}/var/log/exceptions.log', 'a')
+formatter = clean
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_clean]
+format = %(message)s
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+
+# End logging configuration

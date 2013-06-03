@@ -1,0 +1,35 @@
+[circus]
+check_delay = 5
+endpoint = tcp://127.0.0.1:5555
+pubsub_endpoint = tcp://127.0.0.1:5556
+stats_endpoint = tcp://127.0.0.1:5557
+
+httpd = True
+httpd_host = localhost
+httpd_port = ${ports:circus}
+
+[watcher:nginx]
+cmd = ${buildout:directory}/parts/nginx/sbin/nginx
+args = -c ${buildout:directory}/config/nginx.conf
+
+[watcher:mongodb]
+cmd = ${buildout:directory}/bin/mongod
+args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath ${buildout:directory}/var/log/mongodb.log --directoryperdb --rest
+
+[watcher:osiris]
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/osiris.ini --log-output ${buildout:directory}/var/log/osiris.log
+use_sockets = True
+numprocesses = 5
+
+[socket:osiris]
+host = 0.0.0.0
+port = 6543
+
+# [watcher:webconsole]
+# cmd = ${buildout:directory}/bin/chaussette --backend socketio --fd $(circus.sockets.webconsole) circus.web.circushttpd.app
+# singleton = 1
+# use_sockets = 1
+
+# [socket:webconsole]
+# host = 0.0.0.0
+# port = 8080

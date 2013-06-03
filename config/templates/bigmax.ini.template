@@ -1,0 +1,81 @@
+[app:main]
+use = egg:bigmax
+pyramid.reload_templates = ${pyramid:development}
+pyramid.debug_authorization = false
+pyramid.debug_notfound = false
+pyramid.debug_routematch = false
+pyramid.debug_templates = ${pyramid:development}
+pyramid.default_locale_name = en
+pyramid.includes = pyramid_debugtoolbar
+                   pyramid_tm
+                   pyramid_beaker
+
+# MAX and LDAP config
+enable_ldap = false
+exceptions_log = ${buildout:directory}/var/log/exceptions.log
+max.oauth_server = ${hosts:oauth}
+max.oauth_token_endpoint = ${hosts:oauth}/token
+max.oauth_check_endpoint = ${hosts:oauth}/checktoken
+max.oauth_grant_type = password
+max.oauth_clientid = MAX
+max.oauth_scope = widgetcli
+max.server = http://${hosts:main}:${ports:nginx}
+max.talk = http://${hosts:main}:${ports:nginx}/max
+#SSL#max.server = https://${hosts:main}
+#SSL#max.talk = https://${hosts:main}/max
+max.ops_username = operations
+max.ops_password = operations
+
+# Beaker config
+session.type = file
+session.data_dir = ${buildout:directory}/var/sessions/data
+session.lock_dir = ${buildout:directory}/var/sessions/lock
+session.key = mykey
+session.secret = mysecret
+session.cookie_on_exception = true
+cache.regions = default_term, second, short_term, long_term
+cache.type = memory
+cache.second.expire = 1
+cache.short_term.expire = 60
+cache.default_term.expire = 300
+cache.long_term.expire = 3600
+
+#to erradicate
+mongodb.url = mongodb://${hosts-extra:mongo}
+mongodb.db_name = max
+
+[server:main]
+use = egg:waitress#main
+host = ${hosts:main}
+port = ${ports:bigmax}
+
+# Begin logging configuration
+
+[loggers]
+keys = root, bigmax
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARN
+handlers = console
+
+[logger_bigmax]
+level = WARN
+handlers =
+qualname = bigmax
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+
+# End logging configuration
