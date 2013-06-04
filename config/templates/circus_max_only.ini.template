@@ -1,0 +1,40 @@
+[circus]
+check_delay = 5
+endpoint = tcp://127.0.0.1:5555
+pubsub_endpoint = tcp://127.0.0.1:5556
+stats_endpoint = tcp://127.0.0.1:5557
+
+httpd = True
+httpd_host = localhost
+httpd_port = ${ports:circus}
+
+[watcher:nginx]
+cmd = ${buildout:directory}/parts/nginx/sbin/nginx
+args = -c ${buildout:directory}/config/nginx.conf
+
+[watcher:mongodb]
+cmd = ${buildout:directory}/bin/mongod
+args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath ${buildout:directory}/var/log/mongodb.log --directoryperdb --rest
+
+[watcher:max]
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/max.ini --log-output ${buildout:directory}/var/log/max.log
+use_sockets = True
+numprocesses = 4
+
+[socket:osiris]
+host = 0.0.0.0
+port = 6543
+
+[watcher:bigmax]
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/bigmax.ini --log-output ${buildout:directory}/var/log/bigmax.log
+use_sockets = True
+numprocesses = 4
+
+[socket:bigmax]
+host = 0.0.0.0
+port = 6544
+
+[watcher:maxrules]
+cmd = ${buildout:directory}/bin/maxrules.twitter
+args = --twitter-username ${twitter:username} --twitter-password ${twitter:password} --mongodb-url mongodb://localhost --mongodb-name max
+autostart = false
