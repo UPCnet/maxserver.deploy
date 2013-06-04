@@ -19,16 +19,16 @@ args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath $
 [watcher:max]
 cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/max.ini --log-output ${buildout:directory}/var/log/max.log
 use_sockets = True
-numprocesses = 4
+numprocesses = 1
 
-[socket:osiris]
+[socket:max]
 host = 0.0.0.0
 port = 6543
 
 [watcher:bigmax]
 cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/bigmax.ini --log-output ${buildout:directory}/var/log/bigmax.log
 use_sockets = True
-numprocesses = 4
+numprocesses = 1
 
 [socket:bigmax]
 host = 0.0.0.0
