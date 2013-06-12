@@ -15,6 +15,10 @@ osiris.store.db = osiris
 osiris.store.collection = tokens
 osiris.tokenexpiry = 0
 
+osiris.mongodb.cluster = true
+osiris.mongodb.hosts = ${hosts:mongodb}
+osiris.mongodb.replica_set = maxcluster
+
 osiris.whoconfig = %(here)s/osiris-who.ini
 # Check README instructions if you want to enable LDAP auth backend
 osiris.ldap_enabled = false
