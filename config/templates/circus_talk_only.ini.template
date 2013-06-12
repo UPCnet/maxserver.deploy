@@ -18,4 +18,4 @@ args = ${buildout:directory}/src/maxtalk.node/server.js
 
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
-args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath ${buildout:directory}/var/log/mongodb.log --directoryperdb --rest
+args = --config ${buildout:directory}/config/mongodb.conf

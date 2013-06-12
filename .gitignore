@@ -37,6 +37,11 @@ src
 config/circus.ini
 config/config.js
 config/redis.conf
+.max_settings
+config/bigmax.ini
+config/max.ini
+config/nginx.conf
+config/osiris.ini
 downloads
 dump.rdb
 data

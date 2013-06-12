@@ -14,7 +14,7 @@ args = -c ${buildout:directory}/config/nginx.conf
 
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
-args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath ${buildout:directory}/var/log/mongodb.log --directoryperdb --rest
+args = --config ${buildout:directory}/config/mongodb.conf
 
 [watcher:osiris]
 cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/osiris.ini --log-output ${buildout:directory}/var/log/osiris.log
