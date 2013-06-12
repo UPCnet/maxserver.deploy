@@ -1,0 +1,17 @@
+[circus]
+check_delay = 5
+endpoint = tcp://127.0.0.1:5555
+pubsub_endpoint = tcp://127.0.0.1:5556
+stats_endpoint = tcp://127.0.0.1:5557
+
+httpd = True
+httpd_host = ${hosts:main}
+httpd_port = ${ports:circus}
+
+[watcher:talk]
+cmd = ${buildout:directory}/parts/nginx/sbin/nginx
+args = -c ${buildout:directory}/config/nginx.conf
+
+[watcher:mongodb]
+cmd = ${buildout:directory}/bin/mongod
+args = --port 27017 --dbpath ${buildout:directory}/var/data --master --logpath ${buildout:directory}/var/log/mongodb.log --directoryperdb --rest
