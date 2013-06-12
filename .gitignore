@@ -34,3 +34,7 @@ nosetests.xml
 .project
 .pydevproject
 src
+config/circus.ini
+config/config.js
+config/redis.conf
+downloads
