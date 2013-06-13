@@ -36,5 +36,5 @@ port = 6544
 
 [watcher:maxrules]
 cmd = ${buildout:directory}/bin/maxrules.twitter
-args = --twitter-username ${twitter:username} --twitter-password ${twitter:password} --mongodb-url mongodb://localhost --mongodb-name max
+args = --twitter-username ${twitter:username} --twitter-password ${twitter:password} --mongodb-cluster -H ${hosts:mongodb} --mongodb-replica_set maxcluster --mongodb-name max
 autostart = false
