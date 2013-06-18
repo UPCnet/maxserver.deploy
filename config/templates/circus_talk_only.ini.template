@@ -8,14 +8,9 @@ httpd = True
 httpd_host = ${hosts:main}
 httpd_port = ${ports:circus}
 
-[watcher:redis]
-cmd = ${buildout:directory}/bin/redis
-args = ${buildout:directory}/config/redis.conf
-
-[watcher:talk]
-cmd = ${buildout:directory}/bin/node
-args = ${buildout:directory}/src/maxtalk.node/server.js
-
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
 args = --config ${buildout:directory}/config/mongodb.conf
+
+[watcher:rabbitmq]
+cmd = ${buildout:directory}/bin/rabbitmq-server
