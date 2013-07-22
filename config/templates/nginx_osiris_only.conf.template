@@ -10,7 +10,7 @@
 # max_clients = worker_processes * worker_connections
 
 worker_processes 2;
-daemon off;
+daemon on;
 
 # Maximum file descriptors that can be opened per process
 # This should be > worker_connections
@@ -100,18 +100,6 @@ http {
     server ${hosts:main}:${ports:osiris} fail_timeout=0;
   }
 
-  upstream max_server {
-    server ${hosts:main}:${ports:max} fail_timeout=0;
-  }
-
-  upstream bigmax_server {
-    server ${hosts:main}:${ports:bigmax} fail_timeout=0;
-  }
-
-  upstream maxtalk_server {
-    server ${hosts:main}:${ports:maxtalk} fail_timeout=0;
-  }
-
   #SSL# server {
   #SSL#     listen     80;
   #SSL#     server_name ${hosts:main};
@@ -121,7 +109,7 @@ http {
   # Servidor port ${ports:nginx}
   server {
 
-    listen ${ports:nginx} default_server deferred;
+    listen ${ports:nginx};
     #SSL# ssl on;
 
     client_max_body_size 42k;
@@ -133,77 +121,19 @@ http {
     server_name ${hosts:main};
 
     # Path for static files
-    root ${buildout:directory}/src/max/max/static/;
+    root ${buildout:directory}/static/;
 
     #Specify a charset
     charset utf-8;
 
     # Custom 404 page
-    error_page 404 /static/404.html;
-
-    # more_set_headers 'Access-Control-Allow-Origin: *';
-    # more_set_headers 'Access-Control-Allow-Credentials: true';
-    # more_set_headers 'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS';
-    # more_set_headers 'Access-Control-Allow-Headers: X-Oauth-Token,X-Oauth-Username,X-Oauth-Scope,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-
+    error_page 404 /404.html;
 
     ###############################################################
     # Finally, the location of the application
 
     location / {
 
-        # CORS PreFlight
-        # if ($request_method = 'OPTIONS') {
-
-        #     # Not used by now
-        #     # add_header 'Access-Control-Allow-Origin' '*';
-        #     # add_header 'Access-Control-Allow-Credentials' 'true';
-        #     # add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
-        #     #
-        #     # Custom headers and headers various browsers *should* be OK with but aren't
-        #     #
-        #     # add_header 'Access-Control-Allow-Headers' 'X-Oauth-Token,X-Oauth-Username,X-Oauth-Scope,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-
-        #     # Tell client that this pre-flight info is valid for 20 days
-        #     add_header 'Access-Control-Max-Age' 1728000;
-        #     add_header 'Content-Type' 'text/plain charset=UTF-8';
-        #     add_header 'Content-Length' 0;
-
-        #     return 200;
-        # }
-
-        # checks for static file, if not found proxy to app
-        try_files $uri @proxy_to_app;
-    }
-
-    #For maxui development
-    # location ^~ /maxui-dev/ {
-    #        alias   ${buildout:directory}/src/max.ui.js/;
-    #    }
-
-
-    # location ~* ^/socket\.io {
-    #     # FOR SSL --> # proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main};
-    #     proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main}:${ports:nginx};
-    #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    #     proxy_set_header Host $http_host;
-    #     proxy_redirect off;
-    #     proxy_pass    http://maxtalk_server;
-    #     proxy_http_version 1.1;
-    #     proxy_set_header Upgrade $http_upgrade;
-    #     proxy_set_header Connection "upgrade";
-    #  }
-
-    # location ~* ^/(?!contexts|people|activities|conversations|admin).*$ {
-    #     # FOR SSL --> # proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main};
-    #     proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main}:${ports:nginx};
-    #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    #     proxy_set_header Host $http_host;
-    #     proxy_redirect off;
-    #     proxy_pass    http://bigmax_server;
-    #  }
-
-    location @proxy_to_app {
         # FOR SSL --> # proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main};
         proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main}:${ports:nginx};
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
