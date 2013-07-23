@@ -34,8 +34,8 @@ http {
   include       nginx-mime.types;
 
   # XXX: Change on production
-  ssl_certificate       ${nginx-config:certificate};
-  ssl_certificate_key   ${nginx-config:certificate-key};
+  ssl_certificate       ${nginx-config-osiris:certificate};
+  ssl_certificate_key   ${nginx-config-osiris:certificate-key};
 
 
   map $scheme $server_https {
