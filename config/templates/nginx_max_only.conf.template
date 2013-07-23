@@ -10,7 +10,7 @@
 # max_clients = worker_processes * worker_connections
 
 worker_processes 2;
-daemon off;
+daemon on;
 
 # Maximum file descriptors that can be opened per process
 # This should be > worker_connections
