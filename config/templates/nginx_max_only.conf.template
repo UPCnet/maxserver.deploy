@@ -117,7 +117,7 @@ http {
   # Servidor port ${ports:nginx}
   server {
 
-    listen ${ports:nginx} default_server deferred;
+    listen ${ports:nginx};
     #SSL# ssl on;
 
     client_max_body_size 42k;
