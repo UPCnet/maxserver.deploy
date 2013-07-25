@@ -8,9 +8,9 @@ httpd = True
 httpd_host = ${hosts:main}
 httpd_port = ${ports:circus}
 
-[watcher:nginx]
-cmd = ${buildout:directory}/parts/nginx/sbin/nginx
-args = -c ${buildout:directory}/config/nginx.conf
+#[watcher:nginx]
+#cmd = ${buildout:directory}/parts/nginx/sbin/nginx
+#args = -c ${buildout:directory}/config/nginx.conf
 
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
@@ -24,12 +24,3 @@ numprocesses = 5
 [socket:osiris]
 host = 0.0.0.0
 port = 6543
-
-# [watcher:webconsole]
-# cmd = ${buildout:directory}/bin/chaussette --backend socketio --fd $(circus.sockets.webconsole) circus.web.circushttpd.app
-# singleton = 1
-# use_sockets = 1
-
-# [socket:webconsole]
-# host = 0.0.0.0
-# port = 8080

@@ -8,9 +8,9 @@ httpd = True
 httpd_host = ${hosts:main}
 httpd_port = ${ports:circus}
 
-[watcher:nginx]
-cmd = ${buildout:directory}/parts/nginx/sbin/nginx
-args = -c ${buildout:directory}/config/nginx.conf
+#[watcher:nginx]
+#cmd = ${buildout:directory}/parts/nginx/sbin/nginx
+#args = -c ${buildout:directory}/config/nginx.conf
 
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
