@@ -68,7 +68,7 @@ http {
   gzip_http_version 1.0;
   gzip_comp_level 5;
   gzip_min_length 512;
-  gzip_buffers 4 8k;
+  gzip_buffers 16 8k;
   gzip_proxied any;
   gzip_types
     # text/html is always compressed by HttpGzipModule
@@ -95,6 +95,9 @@ http {
 
   gzip_disable        "MSIE [1-6]\.";
   gzip_vary           on;
+
+  # Allow to directly stream medium size files (static resources directly from the upstream server without buffering
+  proxy_buffers              4 32k;
 
   upstream max_server {
     server ${hosts:main}:${ports:max} fail_timeout=0;
