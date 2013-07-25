@@ -8,27 +8,31 @@ httpd = True
 httpd_host = ${hosts:main}
 httpd_port = ${ports:circus}
 
-#[watcher:nginx]
-#cmd = ${buildout:directory}/parts/nginx/sbin/nginx
-#args = -c ${buildout:directory}/config/nginx.conf
-
 [watcher:mongodb]
 cmd = ${buildout:directory}/bin/mongod
 args = --config ${buildout:directory}/config/mongodb.conf
 
 [watcher:max]
-cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.max) --backend gevent paste:config/max.ini --log-output ${buildout:directory}/var/log/max.log
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.max) --backend gevent paste:config/max.ini
 use_sockets = True
 numprocesses = 1
+
+stderr_stream.class = FileStream
+stderr_stream.filename = ${buildout:directory}/var/log/max.log
+stderr_stream.refresh_time = 0.3
 
 [socket:max]
 host = 0.0.0.0
 port = 6543
 
 [watcher:bigmax]
-cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.bigmax) --backend gevent paste:config/bigmax.ini --log-output ${buildout:directory}/var/log/bigmax.log
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.bigmax) --backend gevent paste:config/bigmax.ini
 use_sockets = True
 numprocesses = 1
+
+stderr_stream.class = FileStream
+stderr_stream.filename = ${buildout:directory}/var/log/bigmax.log
+stderr_stream.refresh_time = 0.3
 
 [socket:bigmax]
 host = 0.0.0.0

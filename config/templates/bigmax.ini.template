@@ -62,7 +62,7 @@ handlers = console
 
 [logger_bigmax]
 level = WARN
-handlers =
+handlers = console
 qualname = bigmax
 
 [handler_console]
