@@ -13,7 +13,7 @@ cmd = ${buildout:directory}/bin/mongod
 args = --config ${buildout:directory}/config/mongodb.conf
 
 [watcher:osiris]
-cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:config/osiris.ini
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.osiris) --backend gevent paste:${buildout:directory}/config/osiris.ini
 use_sockets = True
 numprocesses = 1
 
