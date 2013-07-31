@@ -46,7 +46,7 @@ handlers = console
 
 [logger_max]
 level = WARN
-handlers =
+handlers = console
 qualname = max
 
 [logger_exceptions]
@@ -57,7 +57,7 @@ qualname = exceptions
 [handler_exceptionlog]
 level = DEBUG
 class = FileHandler
-args = ('${buildout:directory}/var/log/exceptions.log', 'a')
+args = ('${buildout:directory}/var/log/maxexceptions.log', 'a')
 formatter = clean
 
 [handler_console]

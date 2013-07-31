@@ -10,7 +10,7 @@
 # max_clients = worker_processes * worker_connections
 
 worker_processes 2;
-daemon off;
+daemon on;
 
 # Maximum file descriptors that can be opened per process
 # This should be > worker_connections
@@ -34,8 +34,8 @@ http {
   include       nginx-mime.types;
 
   # XXX: Change on production
-  ssl_certificate       ${nginx-config:certificate};
-  ssl_certificate_key   ${nginx-config:certificate-key};
+  ssl_certificate       ${nginx-config-max:certificate};
+  ssl_certificate_key   ${nginx-config-max:certificate-key};
 
 
   map $scheme $server_https {
@@ -68,7 +68,7 @@ http {
   gzip_http_version 1.0;
   gzip_comp_level 5;
   gzip_min_length 512;
-  gzip_buffers 4 8k;
+  gzip_buffers 16 8k;
   gzip_proxied any;
   gzip_types
     # text/html is always compressed by HttpGzipModule
@@ -96,6 +96,9 @@ http {
   gzip_disable        "MSIE [1-6]\.";
   gzip_vary           on;
 
+  # Allow to directly stream medium size files (static resources directly from the upstream server without buffering
+  proxy_buffers              4 32k;
+
   upstream max_server {
     server ${hosts:main}:${ports:max} fail_timeout=0;
   }
@@ -117,7 +120,7 @@ http {
   # Servidor port ${ports:nginx}
   server {
 
-    listen ${ports:nginx} default_server deferred;
+    listen ${ports:nginx};
     #SSL# ssl on;
 
     client_max_body_size 42k;
@@ -129,9 +132,9 @@ http {
     server_name ${hosts:main};
 
     # Path for static files
-    root ${buildout:directory}/src/max/max/static/;
+    root ${buildout:directory}/static/;
 
-    #Specify a charset
+    # Specify a charset
     charset utf-8;
 
     # Custom 404 page
@@ -151,15 +154,6 @@ http {
         # CORS PreFlight
         if ($request_method = 'OPTIONS') {
 
-            # Not used by now
-            # add_header 'Access-Control-Allow-Origin' '*';
-            # add_header 'Access-Control-Allow-Credentials' 'true';
-            # add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
-            #
-            # Custom headers and headers various browsers *should* be OK with but aren't
-            #
-            # add_header 'Access-Control-Allow-Headers' 'X-Oauth-Token,X-Oauth-Username,X-Oauth-Scope,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-
             # Tell client that this pre-flight info is valid for 20 days
             add_header 'Access-Control-Max-Age' 1728000;
             add_header 'Content-Type' 'text/plain charset=UTF-8';
@@ -171,12 +165,6 @@ http {
         # checks for static file, if not found proxy to app
         try_files $uri @proxy_to_app;
     }
-
-    #For maxui development
-    # location ^~ /maxui-dev/ {
-    #        alias   ${buildout:directory}/src/max.ui.js/;
-    #    }
-
 
     location ~* ^/stomp {
         # FOR SSL --> # proxy_set_header X-Virtual-Host-URI $scheme://${hosts:main};
