@@ -13,7 +13,7 @@ cmd = ${buildout:directory}/bin/mongod
 args = --config ${buildout:directory}/config/mongodb.conf
 
 [watcher:max]
-cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.max) --backend gevent paste:config/max.ini
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.max) --backend gevent paste:${buildout:directory}/config/max.ini
 use_sockets = True
 numprocesses = 1
 
@@ -26,7 +26,7 @@ host = 0.0.0.0
 port = 6543
 
 [watcher:bigmax]
-cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.bigmax) --backend gevent paste:config/bigmax.ini
+cmd = ${buildout:directory}/bin/chaussette --fd $(circus.sockets.bigmax) --backend gevent paste:${buildout:directory}/config/bigmax.ini
 use_sockets = True
 numprocesses = 1
 
