@@ -15,3 +15,6 @@ args = --config ${buildout:directory}/config/mongodb.conf
 [watcher:rabbitmq]
 cmd = ${buildout:directory}/bin/rabbitmq-server
 copy_env = true
+
+[env:rabbitmq]
+HOME = /var/osom/utalk.upcnet.es/
